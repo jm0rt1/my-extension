@@ -1,0 +1,14 @@
+{
+  "menu": [
+    {
+      "id": "tools",
+      "submenu": [
+        {
+          "label": "Hello World",
+          "id": "tool.helloworld",
+          "command": "your-extension:generate-elements"
+        }
+      ]
+    }
+  ]
+}
