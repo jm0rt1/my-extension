@@ -44,37 +44,28 @@ function init() {
 };
 
 function generateElements() {
-  var repository = app.repository;
-  var factory = app.factory;
+  // Get a reference to top-level project
+  var project = app.repository.select("@Project")[0]
 
-  // Start a transaction
+  // Create a UMLModel element as a child of project
+  var model1 = app.factory.createModel({ id: "UMLModel", parent: project })
 
+  // Create a UMLClass element as a child of the model
+  var class1 = app.factory.createModel({ id: "UMLClass", parent: model1 })
 
-  try {
-    // Get the root model element
-    var rootModel = repository.select("@UMLModel")[0];
-    if (!rootModel) {
-      // If no model exists, create one
-      rootModel = factory.createModel({
-        parent: null,
-        modelInitializer: function (elem) {
-          elem.name = "Model";
-        },
-        type: "UMLModel"
-      });
+  // Create a UMLAttribute element and add to the field 'attributes' of the class
+  var attr1 = app.factory.createModel({ id: "UMLAttribute", parent: class1, field: "attributes" })
+
+  // Create a UMLClass with options
+  var options = {
+    id: "UMLClass",
+    parent: model1,
+    modelInitializer: function (elem) {
+      elem.name = "MyClass";
+      elem.isAbstract = true;
     }
-
-    // Create the application structure
-    createAppStructure(appStructure, rootModel);
-
-    // Commit the transaction
-    repository.commitTransaction();
-    app.toast.info("Elements generated successfully.");
-  } catch (error) {
-    // Rollback in case of an error
-    repository.rollbackTransaction();
-    app.toast.error("An error occurred: " + error.message);
   }
+  var class2 = app.factory.createModel(options);
 }
 
 
